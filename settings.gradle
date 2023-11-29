@@ -1,2 +1,3 @@
-rootProject.name = 'SD-Project'
+include 'client'
+include 'server'
 
