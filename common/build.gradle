@@ -2,7 +2,7 @@ plugins {
     id 'java'
 }
 
-group = 'com.faas.client'
+group = 'com.faas.common'
 version = '1.0-SNAPSHOT'
 
 repositories {
