@@ -5,12 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="161ed5b7-7728-4e42-a545-45d3fbe0d328" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/server-worker/src/main/java/com/faas/server_worker/ServerWorker.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/build/tmp/compileJava/previous-compilation-data.bin" beforeDir="false" afterPath="$PROJECT_DIR$/client/build/tmp/compileJava/previous-compilation-data.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/main/java/com/faas/client/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/com/faas/client/Client.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server-manager/src/main/java/com/faas/server_manager/ServerManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/server-manager/src/main/java/com/faas/server_manager/ServerManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server-worker/src/main/java/com/faas/server_worker/Main.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/src/main/java/com/faas/common/Main.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -85,7 +81,7 @@
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;fp/connections&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;fp/manager&quot;,
     &quot;jdk.selected.JAVA_MODULE&quot;: &quot;corretto-19&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
@@ -206,6 +202,8 @@
       <workItem from="1703187272657" duration="676000" />
       <workItem from="1703197216329" duration="8095000" />
       <workItem from="1703259130418" duration="8452000" />
+      <workItem from="1703277570283" duration="5715000" />
+      <workItem from="1703343015099" duration="2897000" />
     </task>
     <servers />
   </component>
