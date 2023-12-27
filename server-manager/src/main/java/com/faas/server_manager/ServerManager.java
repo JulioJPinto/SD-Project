@@ -1,50 +1,107 @@
 package com.faas.server_manager;
 
 import java.io.*;
+import java.lang.reflect.InvocationTargetException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.Queue;
+import java.util.concurrent.locks.ReentrantLock;
+
+import com.faas.common.*;
 
 public class ServerManager {
     private static final int CLIENT_PORT = 8080;
     private static final int SERVER_WORKER_PORT = 8081;
-    private static final Queue<String> messages = new ConcurrentLinkedQueue<String>();
+
+    private static int currentAuthUsers = 0;
+    private static final Queue<Message> messages = new ConcurrentLinkedQueue<Message>();
+    private static final Map<String,User> users = new HashMap<>();
+
+    private static final ReentrantLock authenticationLock = new ReentrantLock();
+
+    private static int authenticateUser(AuthenticationRequest authReq){
+        User user = null;
+        try {
+            authenticationLock.lock();
+            if (authReq.getType() == 2) {
+                if (!users.containsKey(authReq.getUsername())) {
+                    user = new User(authReq.getUsername(), authReq.getPassword());
+                    users.put(user.getUsername(), user);
+                    System.out.println("User novo:\n" + user.toString());
+                    currentAuthUsers += 1;
+                    return currentAuthUsers;
+                }
+            } else if (authReq.getType() == 1) {
+                if (users.containsKey(authReq.getUsername()))
+                    if (Objects.equals(users.get(authReq.getUsername()).getPassword(), authReq.getPassword())) {
+                        user = users.get(authReq.getUsername());
+                        System.out.println("User existente:\n" + user.toString());
+                        currentAuthUsers += 1;
+                        return currentAuthUsers;
+                    }
+            }
+        }finally {
+            authenticationLock.unlock();
+        }
+        System.out.println(currentAuthUsers);
+        return 0;
+    }
 
     public static void main(String[] args) {
-        Thread clientThread = new Thread(() -> {
+        Thread listenClientThread = new Thread(() -> {
             try (ServerSocket clientSocket = new ServerSocket(CLIENT_PORT)) {
                 System.out.println("Waiting for clients on port " + CLIENT_PORT + "...");
 
                 while (true) {
-                    Socket socket = clientSocket.accept(); // need to close this
-                    System.out.println("Client connected.");
+                    Socket socket = clientSocket.accept();
+                    new Thread(() ->{
+                        try (TaggedConnection conn = new TaggedConnection(socket)){
+                            System.out.println("Client connected.");
+                            boolean notAuthenticated = true;
 
-                    DataInputStream in = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
-                    DataOutputStream out = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
+                            int authUserId = 0;
+                            while (notAuthenticated) {
+                                TaggedConnection.Frame authFrame = conn.receive();
+                                AuthenticationRequest authReq = (AuthenticationRequest) authFrame.getMessage();
 
-                    String message = in.readUTF();
-                    System.out.println("Received message from client: " + message);
+                                System.out.println(authReq.toString());
 
-                    out.writeUTF("Hello from manager!");
-                    out.flush();
+                                authUserId = authenticateUser(authReq);
 
-                    messages.add(message);
-                    try {
-                        Thread.sleep(10000);
-                    } catch (InterruptedException e) {
-                        System.out.println("Error: " + e.getMessage());
-                    }
-                    String response = messages.poll();
-                    if (response == null) {
-                        response = "No response";
-                    }
-                    out.writeUTF(response);
-                    out.flush();
+                                AuthenticationResponse authResp = new AuthenticationResponse(authUserId);
+                                System.out.println(authResp.toString());
+                                conn.send(authFrame.getTag(), authResp);
 
-                    in.close();
-                    out.close();
-                    socket.close();
+                                if (authUserId != 0)
+                                    notAuthenticated = false;
+
+                                for (Map.Entry<String, User> entry : users.entrySet()) {
+                                    System.out.println("Key: " + entry.getKey() + ":" + "Valor: " + entry.getValue().toString());
+                                }
+                            }
+
+                            while (true) {
+                                    TaggedConnection.Frame receivedFrame = conn.receive();
+
+                                    TestMessage testReceive = (TestMessage) receivedFrame.getMessage();
+
+                                    //sleep relacionado ao bug que descrevi no demultiplexer, assim funcionou sempre
+                                try {
+                                    Thread.sleep(50);
+                                } catch (InterruptedException e) {
+                                    throw new RuntimeException(e);
+                                }
+
+                                conn.send(receivedFrame.getTag(),testReceive);
+                            }
+
+                        } catch (IOException | ClassNotFoundException | InvocationTargetException | NoSuchMethodException |
+                                 InstantiationException | IllegalAccessException e){
+                            System.out.println("Error: " + e.getMessage());
+
+                        }
+                    }).start();
                 }
 
             } catch (IOException e) {
@@ -59,33 +116,14 @@ public class ServerManager {
                 while (true) {
                     Socket socket = serverWorkerSocket.accept(); // need to close this
                     System.out.println("Server worker connected.");
-
-                    DataInputStream in = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
-                    DataOutputStream out = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
-
-                    String message = in.readUTF();
-                    System.out.println("Received message from server worker: " + message);
-
-                    out.writeUTF("Hello from manager!");
-                    out.flush();
+                    TaggedConnection conn = new TaggedConnection(socket);
 
                     try {
                         Thread.sleep(10000);
                     } catch (InterruptedException e) {
                         System.out.println("Error: " + e.getMessage());
                     }
-                    String queueMessage = messages.poll();
-                    if (queueMessage == null) {
-                        queueMessage = "No message";
-                    }
-                    out.writeUTF(queueMessage);
-                    out.flush();
-                    String response = in.readUTF();
-                    messages.add(response);
-
-                    in.close();
-                    out.close();
-                    socket.close();
+                    Message queueMessage = messages.poll();
                 }
 
             } catch (IOException e) {
@@ -93,7 +131,7 @@ public class ServerManager {
             }
         });
 
-        clientThread.start();
-        serverWorkerThread.start();
+        listenClientThread.start();
+        //serverWorkerThread.start();
     }
 }
