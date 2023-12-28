@@ -4,13 +4,16 @@ import com.faas.common.*;
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.net.Socket;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 
 
 public class Client {
     private static final String SERVER_MANAGER_ADDRESS = "localhost"; // 127.0.0.1
     private static final int SERVER_MANAGER_PORT = 8080;
 
-    private int authenticatedUserID;
+    private int authenticatedClientID;
 
     private Socket socket;
     private Demultiplexer conn;
@@ -42,7 +45,7 @@ public class Client {
 
         System.out.println(loginResp.toString());
 
-        this.authenticatedUserID = loginResp.getAuthenticatedClientID();
+        this.authenticatedClientID = loginResp.getAuthenticatedClientID();
 
         return loginResp.getAuthenticatedClientID();
     }
@@ -56,19 +59,25 @@ public class Client {
 
         System.out.println(newUserResp.toString());
 
-        this.authenticatedUserID = newUserResp.getAuthenticatedClientID();
+        this.authenticatedClientID = newUserResp.getAuthenticatedClientID();
 
         return newUserResp.getAuthenticatedClientID();
     }
 
-    public void sendMessage(String s) throws IOException {
-        TestMessage toSend = new TestMessage(this.authenticatedUserID,s);
+    public void sendRequest(String filename, int memoryNeeded) throws IOException {
+
+        Path inputPath = Path.of("client","Inputs",filename);
+
+        byte[] input = Files.readAllBytes(inputPath);
+
+        ExecuteRequest toSend = new ExecuteRequest(authenticatedClientID,input,memoryNeeded);
 
         conn.send(Thread.currentThread().getId(),toSend);
-    }
 
-    public Message receiveMessage() throws IOException, ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-        return conn.receive(Thread.currentThread().getId());
-    }
+        ExecuteResponse response = (ExecuteResponse) conn.receive(Thread.currentThread().getId());
 
+        Path outputPath = Path.of("client","Outputs","resultado cliente " + authenticatedClientID + " input " + filename + ".7z");
+
+        Files.write(outputPath,response.getResult());
+    }
 }

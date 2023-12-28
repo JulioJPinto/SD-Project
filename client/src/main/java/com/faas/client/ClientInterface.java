@@ -1,6 +1,8 @@
 package com.faas.client;
 
 import com.faas.client.Client;
+import com.faas.common.ExecuteResponse;
+import com.faas.common.ExecuteResponse;
 import com.faas.common.TestMessage;
 import com.faas.common.User;
 
@@ -26,7 +28,7 @@ public class ClientInterface {
                     if (authClientID == 0)
                         System.out.println("Credenciais inválidas");
                     else {
-                        System.out.println("Utilizador: " + username + " deu login.");
+                        System.out.println("Utilizador: " + username + " deu login com o ID " + authClientID);
                         break;
                     }
                 } else if (input == 2){
@@ -38,33 +40,42 @@ public class ClientInterface {
                     if (authClientID == 0)
                         System.out.println("Credenciais inválidas");
                     else {
-                        System.out.println("Utilizador: " + username + " registado.");
+                        System.out.println("Utilizador: " + username + " registado com o ID " + authClientID);
                         break;
                     }
                 }
             }
 
+            int jobCounter = 0;
             while (true) {
-                System.out.println("1 - Enviar Pedido\n9 - Sair");
-                System.out.flush();
+                System.out.println("1 - Enviar Pedido\n2 - Consulta\n9 - Sair");
                 int input = inputScanner.nextInt();
                 if (input == 1) {
-                    System.out.println("Enviar mensagens de teste");
+                    System.out.println("Nome do ficheiro e memória necessária em linhas separadas.");
+                    String filename = inputScanner.next();
+                    int memoryNeeded = inputScanner.nextInt();
+                    jobCounter += 1;
 
-                    for(int i = 0; i < 10; i++) {
-                        int threadN = i;
-                        new Thread(() -> {
-                            try {
-                                client.sendMessage("Enviada da thread " + threadN);
-                                TestMessage received = (TestMessage) client.receiveMessage();
-                                System.out.println("Thread " + threadN + " recebeu: " + received.getS());
+                    String currFilename = filename;
+                    int currMemoryNeeded = memoryNeeded;
+                    int currJobCounter = jobCounter;
+                    new Thread(() -> {
+                        String threadFilename = currFilename;
+                        int threadMem = currMemoryNeeded;
+                        int threadJobCounter = currJobCounter;
 
-                            } catch (IOException | ClassNotFoundException | InvocationTargetException |
-                                     NoSuchMethodException | InstantiationException | IllegalAccessException e) {
-                                throw new RuntimeException(e);
-                            }
-                        }).start();
-                    }
+                        System.out.println("A enviar job nº " + threadJobCounter);
+
+                        try {
+                            client.sendRequest(threadFilename,threadMem);
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+
+                        System.out.println("Job nº " + threadJobCounter + " com input no ficheiro: " + threadFilename);
+
+                    }).start();
+
                 } else if (input == 9) {
                     client.closeClient();
                     break;

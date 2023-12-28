@@ -81,19 +81,28 @@ public class ServerManager {
                                 }
                             }
 
+                            Thread listenThread = new Thread(() -> {
+                               while (true){
+                                   //a thread que espera cenas dos workers e enviar para o cliente;
+                               }
+                            });
+
                             while (true) {
-                                    TaggedConnection.Frame receivedFrame = conn.receive();
+                                //recebe dos clientes e envia para os workers
+                               TaggedConnection.Frame request = conn.receive();
 
-                                    TestMessage testReceive = (TestMessage) receivedFrame.getMessage();
+                                //enviar para os workers
 
-                                    //sleep relacionado ao bug que descrevi no demultiplexer, assim funcionou sempre
+                                //isto aqui é só para testar escrever ficheiros
                                 try {
                                     Thread.sleep(50);
-                                } catch (InterruptedException e) {
+                                }catch (Exception e){
                                     throw new RuntimeException(e);
                                 }
 
-                                conn.send(receivedFrame.getTag(),testReceive);
+                                ExecuteResponse response = new ExecuteResponse(authUserId, ((ExecuteRequest) request.getMessage()).getInput());
+
+                                conn.send(request.getTag(),response);
                             }
 
                         } catch (IOException | ClassNotFoundException | InvocationTargetException | NoSuchMethodException |

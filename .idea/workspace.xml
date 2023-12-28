@@ -6,15 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="161ed5b7-7728-4e42-a545-45d3fbe0d328" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/client/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/build/tmp/compileJava/previous-compilation-data.bin" beforeDir="false" afterPath="$PROJECT_DIR$/client/build/tmp/compileJava/previous-compilation-data.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/settings.gradle" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/client/src/main/java/com/faas/client/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/com/faas/client/Client.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/settings.gradle" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/server-manager/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/server-manager/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server-manager/settings.gradle" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/main/java/com/faas/client/ClientInterface.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/com/faas/client/ClientInterface.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server-manager/src/main/java/com/faas/server_manager/ServerManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/server-manager/src/main/java/com/faas/server_manager/ServerManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server-worker/settings.gradle" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -76,7 +70,7 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProblemsViewState">
-    <option name="selectedTabId" value="ProjectErrors" />
+    <option name="selectedTabId" value="CurrentFile" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 5
@@ -108,6 +102,13 @@
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\jplop\OneDrive\Desktop\SD-Project\client\src" />
+      <recent name="C:\Users\jplop\OneDrive\Desktop\SD-Project\client" />
+      <recent name="C:\Users\jplop\OneDrive\Desktop\SD-Project\client\src\main\java\com\faas\client" />
+    </key>
+  </component>
   <component name="RunAnythingCache">
     <option name="myCommands">
       <command value="gradle build" />
