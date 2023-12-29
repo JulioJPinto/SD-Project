@@ -1,32 +1,89 @@
 package com.faas.client;
 
+import com.faas.common.*;
 import java.io.*;
+import java.lang.reflect.InvocationTargetException;
 import java.net.Socket;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
+
 
 public class Client {
     private static final String SERVER_MANAGER_ADDRESS = "localhost"; // 127.0.0.1
     private static final int SERVER_MANAGER_PORT = 8080;
 
-    public static void main(String[] args) {
+    private int authenticatedClientID;
+
+    private Socket socket;
+    private Demultiplexer conn;
+
+    public Client() throws IOException {
         try {
-            Socket socket = new Socket(SERVER_MANAGER_ADDRESS, SERVER_MANAGER_PORT);
-            DataInputStream in = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
-            DataOutputStream out = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
-
-            out.writeUTF("Hello from client!");
-            out.flush();
-            System.out.println("Sent message to manager.");
-
-            String response = in.readUTF();
-            System.out.println("Server response: " + response);
-            response = in.readUTF();
-            System.out.println("Server response: " + response);
-
-            in.close();
-            out.close();
-            socket.close();
+            this.socket = new Socket(SERVER_MANAGER_ADDRESS, SERVER_MANAGER_PORT);
+            this.conn = new Demultiplexer(new TaggedConnection(this.socket));
+            this.conn.start();
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
         }
+    }
+
+    public void closeClient() throws IOException {
+        try {
+            this.conn.close();
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+
+    public int loginUser(String username, String password) throws IOException, ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+        AuthenticationRequest loginReq = new AuthenticationRequest(1,username,password);
+
+        conn.send(Thread.currentThread().getId(),loginReq);
+
+        AuthenticationResponse loginResp = (AuthenticationResponse) conn.receive(Thread.currentThread().getId());
+
+        System.out.println(loginResp.toString());
+
+        this.authenticatedClientID = loginResp.getAuthenticatedClientID();
+
+        return loginResp.getAuthenticatedClientID();
+    }
+    public int registerNewUser(String username, String password) throws IOException, ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+
+        AuthenticationRequest newUserReq = new AuthenticationRequest(2,username,password);
+
+        conn.send(Thread.currentThread().getId(),newUserReq);
+
+        AuthenticationResponse newUserResp = (AuthenticationResponse) conn.receive(Thread.currentThread().getId());
+
+        System.out.println(newUserResp.toString());
+
+        this.authenticatedClientID = newUserResp.getAuthenticatedClientID();
+
+        return newUserResp.getAuthenticatedClientID();
+    }
+
+    public boolean sendRequest(String filename, int memoryNeeded, int jobID) throws IOException {
+
+        boolean success = true;
+
+        Path inputPath = Path.of("client","Inputs",filename);
+
+        byte[] input = Files.readAllBytes(inputPath);
+
+        ExecuteRequest toSend = new ExecuteRequest(authenticatedClientID,input,memoryNeeded);
+
+        conn.send(Thread.currentThread().getId(),toSend);
+
+        ExecuteResponse response = (ExecuteResponse) conn.receive(Thread.currentThread().getId());
+
+        if (!response.isSuccess())
+            success = false;
+
+        Path outputPath = Path.of("client", "Outputs", "resultado cliente " + authenticatedClientID + " jobID " + jobID + " input " + filename + ".7z");
+        Files.write(outputPath, response.getResult());
+
+        return success;
     }
 }

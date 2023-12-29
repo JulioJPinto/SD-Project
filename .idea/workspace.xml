@@ -6,6 +6,14 @@
   <component name="ChangeListManager">
     <list default="true" id="161ed5b7-7728-4e42-a545-45d3fbe0d328" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/build/tmp/compileJava/previous-compilation-data.bin" beforeDir="false" afterPath="$PROJECT_DIR$/client/build/tmp/compileJava/previous-compilation-data.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/main/java/com/faas/client/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/com/faas/client/Client.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/main/java/com/faas/client/ClientInterface.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/com/faas/client/ClientInterface.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/src/main/java/com/faas/common/ExecuteResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/java/com/faas/common/ExecuteResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/src/main/java/com/faas/common/Message.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/java/com/faas/common/Message.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server-manager/src/main/java/com/faas/server_manager/ServerManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/server-manager/src/main/java/com/faas/server_manager/ServerManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server-worker/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/server-worker/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server-worker/src/main/java/com/faas/server_worker/ServerWorker.java" beforeDir="false" afterPath="$PROJECT_DIR$/server-worker/src/main/java/com/faas/server_worker/ServerWorker.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -13,6 +21,9 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
     <projectState path="$PROJECT_DIR$/client">
       <ProjectState />
     </projectState>
@@ -63,6 +74,9 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 5
 }</component>
@@ -75,30 +89,55 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;fp/manager&quot;,
-    &quot;jdk.selected.JAVA_MODULE&quot;: &quot;corretto-19&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "fp/connections",
+    "jdk.selected.JAVA_MODULE": "corretto-19",
+    "last_opened_file_path": "C:/Users/jplop/OneDrive/Desktop/SD-Project/libs/sd23.jar",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.43333334",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\jplop\OneDrive\Desktop\SD-Project\server-worker" />
+      <recent name="C:\Users\jplop\OneDrive\Desktop\SD-Project\libs" />
+      <recent name="C:\Users\jplop\OneDrive\Desktop\SD-Project\server-worker\src\main\java\com\faas\server_worker" />
+      <recent name="C:\Users\jplop\OneDrive\Desktop\SD-Project\client\src" />
+      <recent name="C:\Users\jplop\OneDrive\Desktop\SD-Project\client" />
+    </key>
+  </component>
   <component name="RunAnythingCache">
     <option name="myCommands">
       <command value="gradle build" />
     </option>
   </component>
-  <component name="RunManager" selected="Gradle.common [build]">
+  <component name="RunManager" selected="Application.ClientInterface">
     <configuration name="Client" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.faas.client.Client" />
-      <module name="client.main" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.faas.client.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ClientInterface" type="Application" factoryName="Application" singleton="false" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.faas.client.ClientInterface" />
+      <module name="SD-Groovy.client.main" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="com.faas.client.*" />
@@ -110,8 +149,10 @@
       </method>
     </configuration>
     <configuration name="ServerManager" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="ALTERNATIVE_JRE_PATH" value="corretto-18" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
       <option name="MAIN_CLASS_NAME" value="com.faas.server_manager.ServerManager" />
-      <module name="server-manager.main" />
+      <module name="SD-Groovy.server-manager.main" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="com.faas.server_manager.*" />
@@ -122,9 +163,12 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="ServerWorker" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+    <configuration name="ServerWorker" type="Application" factoryName="Application" singleton="false" temporary="true" nameIsGenerated="true">
+      <option name="ALTERNATIVE_JRE_PATH" value="corretto-18" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
       <option name="MAIN_CLASS_NAME" value="com.faas.server_worker.ServerWorker" />
-      <module name="server-worker.main" />
+      <module name="SD-Groovy.server-worker.main" />
+      <option name="PROGRAM_PARAMETERS" value="100" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="com.faas.server_worker.*" />
@@ -135,12 +179,34 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="common [build]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+    <configuration name="SD-Project:client [:client:ClientInterface.main()]" type="GradleRunConfiguration" factoryName="Gradle" singleton="false">
       <ExternalSystemSettings>
         <option name="executionName" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$/common" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$/client" />
         <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":client:ClientInterface.main()" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>false</RunAsTest>
+      <method v="2" />
+    </configuration>
+    <configuration name="server-manager [build]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$/server-manager" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
         <option name="taskDescriptions">
           <list />
         </option>
@@ -157,35 +223,21 @@
       <RunAsTest>false</RunAsTest>
       <method v="2" />
     </configuration>
-    <configuration name="server-worker [build]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
-      <ExternalSystemSettings>
-        <option name="executionName" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$/server-worker" />
-        <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" />
-        <option name="taskDescriptions">
-          <list />
-        </option>
-        <option name="taskNames">
-          <list>
-            <option value="build" />
-          </list>
-        </option>
-        <option name="vmOptions" />
-      </ExternalSystemSettings>
-      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
-      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
-      <DebugAllEnabled>false</DebugAllEnabled>
-      <RunAsTest>false</RunAsTest>
-      <method v="2" />
-    </configuration>
+    <list>
+      <item itemvalue="Application.Client" />
+      <item itemvalue="Application.ClientInterface" />
+      <item itemvalue="Application.ServerManager" />
+      <item itemvalue="Application.ServerWorker" />
+      <item itemvalue="Gradle.SD-Project:client [:client:ClientInterface.main()]" />
+      <item itemvalue="Gradle.server-manager [build]" />
+    </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Gradle.common [build]" />
+        <item itemvalue="Application.ClientInterface" />
+        <item itemvalue="Application.ServerManager" />
+        <item itemvalue="Gradle.server-manager [build]" />
         <item itemvalue="Application.ServerWorker" />
         <item itemvalue="Application.Client" />
-        <item itemvalue="Application.ServerManager" />
-        <item itemvalue="Gradle.server-worker [build]" />
       </list>
     </recent_temporary>
   </component>
@@ -201,13 +253,6 @@
       <workItem from="1703187272657" duration="676000" />
       <workItem from="1703197216329" duration="8095000" />
       <workItem from="1703259130418" duration="8452000" />
-      <workItem from="1703277570283" duration="5715000" />
-      <workItem from="1703343015099" duration="7323000" />
-      <workItem from="1703358120242" duration="4306000" />
-      <workItem from="1703607986241" duration="6917000" />
-      <workItem from="1703632718462" duration="7455000" />
-      <workItem from="1703690989137" duration="745000" />
-      <workItem from="1703870620045" duration="2247000" />
     </task>
     <servers />
   </component>
