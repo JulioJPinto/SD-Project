@@ -1,5 +1,10 @@
 package com.faas.server_worker;
 
+import com.faas.common.ExecuteRequest;
+import com.faas.common.ExecuteResponse;
+import com.faas.common.TaggedConnection;
+import sd23.*;
+
 import java.io.*;
 import java.net.Socket;
 
@@ -9,25 +14,38 @@ public class ServerWorker {
 
     public static void main(String[] args) {
         try {
+            final int memory = Integer.parseInt(args[0]);
+            int usedMemory = 0;
+            System.out.println("Memory: " + memory);
+
             Socket socket = new Socket(SERVER_MANAGER_ADDRESS, SERVER_MANAGER_PORT);
-            DataInputStream in = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
-            DataOutputStream out = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
+            TaggedConnection conn = new TaggedConnection(socket);
+            while (true){
+                TaggedConnection.Frame received = conn.receive();
+                new Thread(()-> {
+                    boolean success;
+                    ExecuteRequest request = (ExecuteRequest) received.getMessage();
 
-            out.writeUTF("Hello from server worker!");
-            out.flush();
-            System.out.println("Sent message to manager.");
+                    byte[] result = null;
+                    try {
+                        result = JobFunction.execute(request.getInput());
+                        success = true;
+                    } catch (JobFunctionException e) {
+                        success = false;
+                        result = e.getMessage().getBytes();
+                    }
 
-            String response = in.readUTF();
-            System.out.println("Server response: " + response);
+                    ExecuteResponse response = new ExecuteResponse(request.getAuthClientID(), success, result);
 
-            response = in.readUTF();
-            System.out.println("Server response: " + response);
-            out.writeUTF("Hello from server worker!");
-            out.flush();
+                    try {
+                        conn.send(received.getTag(),response);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }).start();
 
-            in.close();
-            out.close();
-            socket.close();
+            }
+
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
         }

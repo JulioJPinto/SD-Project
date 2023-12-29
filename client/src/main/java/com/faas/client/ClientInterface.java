@@ -1,10 +1,8 @@
 package com.faas.client;
 
 import com.faas.client.Client;
+import com.faas.common.*;
 import com.faas.common.ExecuteResponse;
-import com.faas.common.ExecuteResponse;
-import com.faas.common.TestMessage;
-import com.faas.common.User;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -46,7 +44,7 @@ public class ClientInterface {
                 }
             }
 
-            int jobCounter = 0;
+            AtomicInteger jobCounter = new AtomicInteger(0);
             while (true) {
                 System.out.println("1 - Enviar Pedido\n2 - Consulta\n9 - Sair");
                 int input = inputScanner.nextInt();
@@ -54,25 +52,28 @@ public class ClientInterface {
                     System.out.println("Nome do ficheiro e memória necessária em linhas separadas.");
                     String filename = inputScanner.next();
                     int memoryNeeded = inputScanner.nextInt();
-                    jobCounter += 1;
+                    jobCounter.increment();
 
                     String currFilename = filename;
                     int currMemoryNeeded = memoryNeeded;
-                    int currJobCounter = jobCounter;
                     new Thread(() -> {
+                        int threadJobCounter = jobCounter.get();
                         String threadFilename = currFilename;
                         int threadMem = currMemoryNeeded;
-                        int threadJobCounter = currJobCounter;
 
                         System.out.println("A enviar job nº " + threadJobCounter);
 
+                        boolean success = false;
                         try {
-                            client.sendRequest(threadFilename,threadMem);
+                            success = client.sendRequest(threadFilename,threadMem,threadJobCounter);
                         } catch (IOException e) {
                             throw new RuntimeException(e);
                         }
 
-                        System.out.println("Job nº " + threadJobCounter + " com input no ficheiro: " + threadFilename);
+                        if (success)
+                            System.out.println("Job nº " + threadJobCounter + " com input no ficheiro: " + threadFilename + " executado com sucesso.");
+                        else
+                            System.out.println("Job nº " + threadJobCounter + " com input no ficheiro: " + threadFilename + " falhou");
 
                     }).start();
 

@@ -64,7 +64,9 @@ public class Client {
         return newUserResp.getAuthenticatedClientID();
     }
 
-    public void sendRequest(String filename, int memoryNeeded) throws IOException {
+    public boolean sendRequest(String filename, int memoryNeeded, int jobID) throws IOException {
+
+        boolean success = true;
 
         Path inputPath = Path.of("client","Inputs",filename);
 
@@ -76,8 +78,12 @@ public class Client {
 
         ExecuteResponse response = (ExecuteResponse) conn.receive(Thread.currentThread().getId());
 
-        Path outputPath = Path.of("client","Outputs","resultado cliente " + authenticatedClientID + " input " + filename + ".7z");
+        if (!response.isSuccess())
+            success = false;
 
-        Files.write(outputPath,response.getResult());
+        Path outputPath = Path.of("client", "Outputs", "resultado cliente " + authenticatedClientID + " jobID " + jobID + " input " + filename + ".7z");
+        Files.write(outputPath, response.getResult());
+
+        return success;
     }
 }

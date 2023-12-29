@@ -14,37 +14,34 @@ public class ServerManager {
     private static final int CLIENT_PORT = 8080;
     private static final int SERVER_WORKER_PORT = 8081;
 
-    private static int currentAuthUsers = 0;
-    private static final Queue<Message> messages = new ConcurrentLinkedQueue<Message>();
-    private static final Map<String,User> users = new HashMap<>();
+    private static AtomicInteger currentAuthUsers = new AtomicInteger(0);
+    private static final Queue<TaggedConnection.Frame> messagesSent = new ConcurrentLinkedQueue<TaggedConnection.Frame>();
+
+    private static final Queue<TaggedConnection.Frame> messagesReceived = new ConcurrentLinkedQueue<TaggedConnection.Frame>();
+    private static final SynchronizedMap<String,User> users = new SynchronizedMap<>();
 
     private static final ReentrantLock authenticationLock = new ReentrantLock();
 
     private static int authenticateUser(AuthenticationRequest authReq){
         User user = null;
-        try {
-            authenticationLock.lock();
-            if (authReq.getType() == 2) {
-                if (!users.containsKey(authReq.getUsername())) {
-                    user = new User(authReq.getUsername(), authReq.getPassword());
-                    users.put(user.getUsername(), user);
-                    System.out.println("User novo:\n" + user.toString());
-                    currentAuthUsers += 1;
-                    return currentAuthUsers;
-                }
-            } else if (authReq.getType() == 1) {
-                if (users.containsKey(authReq.getUsername()))
-                    if (Objects.equals(users.get(authReq.getUsername()).getPassword(), authReq.getPassword())) {
-                        user = users.get(authReq.getUsername());
-                        System.out.println("User existente:\n" + user.toString());
-                        currentAuthUsers += 1;
-                        return currentAuthUsers;
-                    }
+        if (authReq.getType() == 2) {
+            if (!users.containsKey(authReq.getUsername())) {
+                user = new User(authReq.getUsername(), authReq.getPassword());
+                users.put(user.getUsername(), user);
+                System.out.println("User novo:\n" + user.toString());
+                currentAuthUsers.increment();
+                return currentAuthUsers.get();
             }
-        }finally {
-            authenticationLock.unlock();
+        } else if (authReq.getType() == 1) {
+            if (users.containsKey(authReq.getUsername()))
+                if (Objects.equals(users.get(authReq.getUsername()).getPassword(), authReq.getPassword())) {
+                    user = users.get(authReq.getUsername());
+                    System.out.println("User existente:\n" + user.toString());
+                    currentAuthUsers.increment();
+                    return currentAuthUsers.get();
+                }
         }
-        System.out.println(currentAuthUsers);
+        System.out.println(currentAuthUsers.get());
         return 0;
     }
 
@@ -81,28 +78,29 @@ public class ServerManager {
                                 }
                             }
 
-                            Thread listenThread = new Thread(() -> {
+                            int finalAuthUserId = authUserId;
+                            new Thread(() -> {
+                                //recebe dos workers e envia para os clientes
                                while (true){
-                                   //a thread que espera cenas dos workers e enviar para o cliente;
+                                  TaggedConnection.Frame response = messagesReceived.peek();
+                                   if (response != null && response.getMessage().getAuthClientID() == finalAuthUserId){
+                                      messagesReceived.remove(response);
+
+                                      try {
+                                          conn.send(response);
+                                      } catch (IOException e) {
+                                          throw new RuntimeException(e);
+                                      }
+                                  }
                                }
-                            });
+                            }).start();
 
                             while (true) {
                                 //recebe dos clientes e envia para os workers
                                TaggedConnection.Frame request = conn.receive();
 
-                                //enviar para os workers
 
-                                //isto aqui é só para testar escrever ficheiros
-                                try {
-                                    Thread.sleep(50);
-                                }catch (Exception e){
-                                    throw new RuntimeException(e);
-                                }
-
-                                ExecuteResponse response = new ExecuteResponse(authUserId, ((ExecuteRequest) request.getMessage()).getInput());
-
-                                conn.send(request.getTag(),response);
+                               messagesSent.add(request);
                             }
 
                         } catch (IOException | ClassNotFoundException | InvocationTargetException | NoSuchMethodException |
@@ -123,16 +121,37 @@ public class ServerManager {
                 System.out.println("Waiting for server workers on port " + SERVER_WORKER_PORT + "...");
 
                 while (true) {
-                    Socket socket = serverWorkerSocket.accept(); // need to close this
+                    Socket socket = serverWorkerSocket.accept();
                     System.out.println("Server worker connected.");
-                    TaggedConnection conn = new TaggedConnection(socket);
+                    new Thread(() ->{
+                        try (TaggedConnection conn = new TaggedConnection(socket)){
 
-                    try {
-                        Thread.sleep(10000);
-                    } catch (InterruptedException e) {
-                        System.out.println("Error: " + e.getMessage());
-                    }
-                    Message queueMessage = messages.poll();
+                            new Thread(() ->{
+                                //envia para os workers
+                                while (true) {
+                                    TaggedConnection.Frame request = messagesSent.poll();
+
+                                    if (request != null) {
+                                        try {
+                                            conn.send(request);
+                                        } catch (IOException e) {
+                                            throw new RuntimeException(e);
+                                        }
+                                    }
+                                }
+                            }).start();
+
+                            while (true) {
+                                //recebe dos workers
+                                TaggedConnection.Frame response = conn.receive();
+                                messagesReceived.add(response);
+                            }
+                        } catch (IOException | InvocationTargetException | InstantiationException |
+                                 ClassNotFoundException | NoSuchMethodException | IllegalAccessException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }).start();
+
                 }
 
             } catch (IOException e) {
@@ -141,6 +160,6 @@ public class ServerManager {
         });
 
         listenClientThread.start();
-        //serverWorkerThread.start();
+        serverWorkerThread.start();
     }
 }

@@ -6,9 +6,14 @@
   <component name="ChangeListManager">
     <list default="true" id="161ed5b7-7728-4e42-a545-45d3fbe0d328" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/build/tmp/compileJava/previous-compilation-data.bin" beforeDir="false" afterPath="$PROJECT_DIR$/client/build/tmp/compileJava/previous-compilation-data.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/src/main/java/com/faas/client/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/com/faas/client/Client.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/src/main/java/com/faas/client/ClientInterface.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/com/faas/client/ClientInterface.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/src/main/java/com/faas/common/ExecuteResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/java/com/faas/common/ExecuteResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/src/main/java/com/faas/common/Message.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/java/com/faas/common/Message.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server-manager/src/main/java/com/faas/server_manager/ServerManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/server-manager/src/main/java/com/faas/server_manager/ServerManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server-worker/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/server-worker/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server-worker/src/main/java/com/faas/server_worker/ServerWorker.java" beforeDir="false" afterPath="$PROJECT_DIR$/server-worker/src/main/java/com/faas/server_worker/ServerWorker.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -84,29 +89,32 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;fp/connections&quot;,
-    &quot;jdk.selected.JAVA_MODULE&quot;: &quot;corretto-19&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "fp/connections",
+    "jdk.selected.JAVA_MODULE": "corretto-19",
+    "last_opened_file_path": "C:/Users/jplop/OneDrive/Desktop/SD-Project/libs/sd23.jar",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.43333334",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\jplop\OneDrive\Desktop\SD-Project\server-worker" />
+      <recent name="C:\Users\jplop\OneDrive\Desktop\SD-Project\libs" />
+      <recent name="C:\Users\jplop\OneDrive\Desktop\SD-Project\server-worker\src\main\java\com\faas\server_worker" />
       <recent name="C:\Users\jplop\OneDrive\Desktop\SD-Project\client\src" />
       <recent name="C:\Users\jplop\OneDrive\Desktop\SD-Project\client" />
-      <recent name="C:\Users\jplop\OneDrive\Desktop\SD-Project\client\src\main\java\com\faas\client" />
     </key>
   </component>
   <component name="RunAnythingCache">
@@ -117,7 +125,6 @@
   <component name="RunManager" selected="Application.ClientInterface">
     <configuration name="Client" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.faas.client.Client" />
-      <module name="client.main" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="com.faas.client.*" />
@@ -156,9 +163,12 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="ServerWorker" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+    <configuration name="ServerWorker" type="Application" factoryName="Application" singleton="false" temporary="true" nameIsGenerated="true">
+      <option name="ALTERNATIVE_JRE_PATH" value="corretto-18" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
       <option name="MAIN_CLASS_NAME" value="com.faas.server_worker.ServerWorker" />
-      <module name="server-worker.main" />
+      <module name="SD-Groovy.server-worker.main" />
+      <option name="PROGRAM_PARAMETERS" value="100" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="com.faas.server_worker.*" />
@@ -196,7 +206,7 @@
         <option name="executionName" />
         <option name="externalProjectPath" value="$PROJECT_DIR$/server-manager" />
         <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" />
+        <option name="scriptParameters" value="" />
         <option name="taskDescriptions">
           <list />
         </option>

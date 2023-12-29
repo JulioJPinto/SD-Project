@@ -28,6 +28,10 @@ public abstract class Message {
         return qualifiedSubclassName;
     }
 
+    public int getAuthClientID(){
+        return this.authClientID;
+    }
+
     public void serialize(DataOutputStream out) throws IOException{
         out.writeInt(authClientID);
         out.writeUTF(qualifiedSubclassName);
