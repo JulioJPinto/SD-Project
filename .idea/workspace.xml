@@ -5,12 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="161ed5b7-7728-4e42-a545-45d3fbe0d328" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/server-worker/src/main/java/com/faas/server_worker/ServerWorker.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/build/tmp/compileJava/previous-compilation-data.bin" beforeDir="false" afterPath="$PROJECT_DIR$/client/build/tmp/compileJava/previous-compilation-data.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/main/java/com/faas/client/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/com/faas/client/Client.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server-manager/src/main/java/com/faas/server_manager/ServerManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/server-manager/src/main/java/com/faas/server_manager/ServerManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server-worker/src/main/java/com/faas/server_worker/Main.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -85,7 +80,7 @@
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;fp/connections&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;fp/manager&quot;,
     &quot;jdk.selected.JAVA_MODULE&quot;: &quot;corretto-19&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
@@ -100,7 +95,7 @@
       <command value="gradle build" />
     </option>
   </component>
-  <component name="RunManager" selected="Application.Client">
+  <component name="RunManager" selected="Gradle.common [build]">
     <configuration name="Client" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.faas.client.Client" />
       <module name="client.main" />
@@ -140,10 +135,10 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="server-manager [build]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+    <configuration name="common [build]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$/server-manager" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$/common" />
         <option name="externalSystemIdString" value="GRADLE" />
         <option name="scriptParameters" />
         <option name="taskDescriptions">
@@ -186,11 +181,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Gradle.common [build]" />
         <item itemvalue="Application.ServerWorker" />
         <item itemvalue="Application.Client" />
         <item itemvalue="Application.ServerManager" />
         <item itemvalue="Gradle.server-worker [build]" />
-        <item itemvalue="Gradle.server-manager [build]" />
       </list>
     </recent_temporary>
   </component>
@@ -206,6 +201,13 @@
       <workItem from="1703187272657" duration="676000" />
       <workItem from="1703197216329" duration="8095000" />
       <workItem from="1703259130418" duration="8452000" />
+      <workItem from="1703277570283" duration="5715000" />
+      <workItem from="1703343015099" duration="7323000" />
+      <workItem from="1703358120242" duration="4306000" />
+      <workItem from="1703607986241" duration="6917000" />
+      <workItem from="1703632718462" duration="7455000" />
+      <workItem from="1703690989137" duration="745000" />
+      <workItem from="1703870620045" duration="2247000" />
     </task>
     <servers />
   </component>
