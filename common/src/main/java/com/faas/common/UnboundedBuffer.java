@@ -1,6 +1,7 @@
 package com.faas.common;
 
 import java.util.ArrayDeque;
+import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.concurrent.locks.Condition;
@@ -69,6 +70,15 @@ public class UnboundedBuffer<T> {
         this.lock.writeLock().lock();
         try {
             this.notEmpty.signalAll();
+        } finally {
+            this.lock.writeLock().unlock();
+        }
+    }
+
+    public List<T> copyToList() {
+        this.lock.writeLock().lock();
+        try {
+            return List.copyOf(this.queue);
         } finally {
             this.lock.writeLock().unlock();
         }

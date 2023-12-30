@@ -5,7 +5,6 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 public class User {
-
     private String username;
     private String password;
 

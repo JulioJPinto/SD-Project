@@ -5,48 +5,19 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.*;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.locks.ReentrantLock;
-
 import com.faas.common.*;
 
 public class ServerManager {
     private static final int CLIENT_PORT = 8080;
     private static final int SERVER_WORKER_PORT = 8081;
-    private static AtomicInteger currentAuthUsers = new AtomicInteger(0);
-    private static AtomicInteger availableMemory = new AtomicInteger(0);
-    private static final BoundedBuffer<TaggedConnection.Frame> messagesSent = new BoundedBuffer<>(50);
+    private static final BoundedBuffer<Tuple<WorkerStats, TaggedConnection.Frame>> messagesSent = new BoundedBuffer<>(50);
     private static final BoundedBuffer<TaggedConnection.Frame> messagesReceived = new BoundedBuffer<>(50);
-    private static final SynchronizedMap<String,User> users = new SynchronizedMap<>();
 
-    private static final ReentrantLock authenticationLock = new ReentrantLock();
-
-    private static int authenticateUser(AuthenticationRequest authReq){
-        User user = null;
-        if (authReq.getType() == 2) {
-            if (!users.containsKey(authReq.getUsername())) {
-                user = new User(authReq.getUsername(), authReq.getPassword());
-                users.put(user.getUsername(), user);
-                System.out.println("User novo:\n" + user.toString());
-                currentAuthUsers.increment();
-                return currentAuthUsers.get();
-            }
-        } else if (authReq.getType() == 1) {
-            if (users.containsKey(authReq.getUsername()))
-                if (Objects.equals(users.get(authReq.getUsername()).getPassword(), authReq.getPassword())) {
-                    user = users.get(authReq.getUsername());
-                    System.out.println("User existente:\n" + user.toString());
-                    currentAuthUsers.increment();
-                    return currentAuthUsers.get();
-                }
-        }
-        System.out.println(currentAuthUsers.get());
-        return 0;
-    }
 
     public static void main(String[] args) {
         ThreadPool threadPool = new ThreadPool();
         threadPool.start(16);
+
         Thread listenClientThread = new Thread(() -> {
             try (ServerSocket clientSocket = new ServerSocket(CLIENT_PORT)) {
                 System.out.println("Waiting for clients on port " + CLIENT_PORT + "...");
@@ -65,7 +36,7 @@ public class ServerManager {
 
                                 System.out.println(authReq.toString());
 
-                                authUserId = authenticateUser(authReq);
+                                authUserId = Authenticator.authenticateUser(authReq);
 
                                 AuthenticationResponse authResp = new AuthenticationResponse(authUserId);
                                 System.out.println(authResp.toString());
@@ -74,17 +45,17 @@ public class ServerManager {
                                 if (authUserId != 0)
                                     notAuthenticated = false;
 
-                                for (Map.Entry<String, User> entry : users.entrySet()) {
+                                for (Map.Entry<String, User> entry : Authenticator.getUsersEntries()) {
                                     System.out.println("Key: " + entry.getKey() + ":" + "Valor: " + entry.getValue().toString());
                                 }
                             }
 
                             int finalAuthUserId = authUserId;
-                            threadPool.execute(()->{
+                            threadPool.execute(() -> {
                                 //recebe dos workers e envia para os clientes
                                 while (true){
                                     TaggedConnection.Frame response = messagesReceived.peek();
-                                    if (response != null && response.getMessage().getAuthClientID() == finalAuthUserId){
+                                    if (response != null && response.getMessage().getAuthClientID() == finalAuthUserId) {
                                         messagesReceived.remove(response);
 
                                         try {
@@ -101,8 +72,8 @@ public class ServerManager {
                                TaggedConnection.Frame request = conn.receive();
 
                                 if (request.getMessage().getClass().getName().equals(StatusRequest.class.getName())){
-                                    threadPool.execute(()->{
-                                        StatusResponse statusResp = new StatusResponse(finalAuthUserId,messagesSent.length(),availableMemory.get());
+                                    threadPool.execute(() -> {
+                                        StatusResponse statusResp = new StatusResponse(finalAuthUserId,messagesSent.length(), WorkersInfo.getAvailableMemory());
                                         try {
                                             conn.send(request.getTag(),statusResp);
                                         } catch (IOException e) {
@@ -110,7 +81,11 @@ public class ServerManager {
                                         }
                                     });
                                 } else {
-                                    messagesSent.produce(request);
+                                    WorkerStats worker = null;
+                                    while (worker == null) {
+                                        worker = Scheduler.chooseNextWorker(request.getMessage());
+                                    }
+                                    messagesSent.produce(new Tuple<>(worker, request));
                                     System.out.println("Pendente: " + messagesSent.length());
                                 }
                             }
@@ -129,7 +104,7 @@ public class ServerManager {
                 System.out.println("Error: " + e.getMessage());
             }
         });
-
+// =====================================================================================================================
         Thread serverWorkerThread = new Thread(() -> {
             try (ServerSocket serverWorkerSocket = new ServerSocket(SERVER_WORKER_PORT)) {
                 System.out.println("Waiting for server workers on port " + SERVER_WORKER_PORT + "...");
@@ -139,25 +114,32 @@ public class ServerManager {
                     System.out.println("Server worker connected.");
                     new Thread(() ->{
                         WorkerHello workerHello = null;
+                        WorkerStats workerStats = null;
                         try (TaggedConnection conn = new TaggedConnection(socket)){
                             workerHello = (WorkerHello) conn.receive().getMessage();
-                            availableMemory.add(workerHello.getTotalMemory());
+                            int workerId = WorkersInfo.generateId();
+                            workerStats = new WorkerStats(workerId, workerHello.getTotalMemory(), conn);
+                            WorkersInfo.updateWorkerMemory(workerId, workerHello.getTotalMemory(), false);
+                            WorkersInfo.addWorker(workerId, workerStats);
+                            // print every worker inside the map
+                            for (Map.Entry<Integer, WorkerStats> entry : WorkersInfo.getWorkersEntries()) {
+                                System.out.println("Key: " + entry.getKey() + ":" + "Valor: " + entry.getValue().toString());
+                            }
+                            System.out.println("Memory: " + workerHello.getTotalMemory());
+                            System.out.println("Total memory: " + WorkersInfo.getAvailableMemory());
 
-                            threadPool.execute(()->{
+                            threadPool.execute(() -> {
                                 //envia requests para os workers
                                 while (true) {
-                                    TaggedConnection.Frame request = null;
-                                    try {
-                                        request = messagesSent.consume();
-                                    } catch (InterruptedException e) {
-                                        throw new RuntimeException(e);
-                                    }
+                                    Tuple<WorkerStats, TaggedConnection.Frame> request = messagesSent.peek();
+                                    if (request != null && request.getFirst().getId() == workerId) {
+                                        messagesSent.remove(request);
 
-                                    try {
-                                        availableMemory.subtract(((ExecuteRequest)request.getMessage()).getMemoryNeeded());
-                                        conn.send(request);
-                                    } catch (IOException e) {
-                                        throw new RuntimeException(e);
+                                        try {
+                                            conn.send(request.getSecond());
+                                        } catch (IOException e) {
+                                            throw new RuntimeException(e);
+                                        }
                                     }
                                 }
                             });
@@ -165,8 +147,7 @@ public class ServerManager {
                             while (true) {
                                 //recebe respostas a requests dos workers
                                 TaggedConnection.Frame response = conn.receive();
-
-                                availableMemory.add(((ExecuteResponse)response.getMessage()).getMemoryUsed());
+                                WorkersInfo.updateWorkerMemory(workerId, ((ExecuteResponse)response.getMessage()).getMemoryUsed(), false);
                                 messagesReceived.produce(response);
                             }
                         } catch (IOException | InvocationTargetException | InstantiationException |
@@ -175,7 +156,9 @@ public class ServerManager {
                             throw new RuntimeException(e);
                         } finally {
                             assert workerHello != null;
-                            availableMemory.subtract(workerHello.getTotalMemory());
+                            assert workerStats != null;
+                            WorkersInfo.updateWorkerMemory(workerStats.getId(), workerHello.getTotalMemory(), true);
+                            WorkersInfo.removeWorker(workerStats.getId());
                         }
                     }).start();
 

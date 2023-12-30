@@ -51,4 +51,22 @@ public class SynchronizedMap<K, V> {
             readWriteLock.readLock().unlock();
         }
     }
+
+    public void remove(K key) {
+        readWriteLock.writeLock().lock();
+        try {
+            map.remove(key);
+        } finally {
+            readWriteLock.writeLock().unlock();
+        }
+    }
+
+    public int size() {
+        readWriteLock.readLock().lock();
+        try {
+            return map.size();
+        } finally {
+            readWriteLock.readLock().unlock();
+        }
+    }
 }
