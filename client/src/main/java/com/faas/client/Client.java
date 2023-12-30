@@ -77,9 +77,9 @@ public class Client {
             }
 
             if (success)
-                listener.onStringReceived("Job nº " + jobID + " com input no ficheiro: " + filename + " do cliente nº" + authenticatedClientID + " executado com sucesso.");
+                listener.onStringReceived("Job n " + jobID + " com input no ficheiro: " + filename + " do cliente n " + authenticatedClientID + " executado com sucesso.");
             else
-                listener.onStringReceived("Job nº " + jobID + " com input no ficheiro: " + filename + " do cliente nº" + authenticatedClientID + " falhou");
+                listener.onStringReceived("Job n " + jobID + " com input no ficheiro: " + filename + " do cliente n " + authenticatedClientID + " falhou");
         });
     }
 
