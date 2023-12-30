@@ -8,12 +8,14 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Scanner;
 
-public class ClientInterface {
-    public static void main(String[] args){
+public class ClientInterface implements ReturnListener{
+
+    public ClientInterface(){
+       this.run();
+    }
+    public void run(){
         try (Scanner inputScanner = new Scanner(System.in)) {
-            ThreadPool threadPool = new ThreadPool();
-            threadPool.start(4);
-            Client client = new Client();
+            Client client = new Client(this);
             int authClientID;
 
             while (true){
@@ -46,57 +48,35 @@ public class ClientInterface {
                 }
             }
 
-            AtomicInteger jobCounter = new AtomicInteger(0);
             while (true) {
                 System.out.println("1 - Enviar Pedido\n2 - Consulta\n9 - Sair");
                 int input = inputScanner.nextInt();
                 if (input == 1) {
                     System.out.println("Nome do ficheiro e memória necessária em linhas separadas.");
+
                     String filename = inputScanner.next();
                     int memoryNeeded = inputScanner.nextInt();
-                    jobCounter.increment();
 
-                    String currFilename = filename;
-                    int currMemoryNeeded = memoryNeeded;
-                    threadPool.execute(()->{
-                        int threadJobCounter = jobCounter.get();
-                        String threadFilename = currFilename;
-                        int threadMem = currMemoryNeeded;
+                    client.executeJob(filename,memoryNeeded);
 
-                        System.out.println("A enviar job nº " + threadJobCounter);
-
-                        boolean success = false;
-                        try {
-                            success = client.sendRequest(threadFilename,threadMem,threadJobCounter);
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
-                        }
-
-                        if (success)
-                            System.out.println("Job nº " + threadJobCounter + " com input no ficheiro: " + threadFilename + " executado com sucesso.");
-                        else
-                            System.out.println("Job nº " + threadJobCounter + " com input no ficheiro: " + threadFilename + " falhou");
-
-                    });
                 } else if (input == 2) {
-                    threadPool.execute(()->{
-                        try {
-                            StatusResponse status = client.getStatus();
-                            System.out.println("Atualmente existem " + status.getPendingTasks() + " tarefas pendentes e a memória disponível é " + status.getAvailableMemory() + ".");
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
-                        }
-
-
-                    });
+                    client.executeStatus();
                 } else if (input == 9) {
                     client.closeClient();
-                    threadPool.stop();
                     break;
                 }
             }
         } catch (Exception e) {
             System.out.println("Error:" + e.getMessage());
         }
+    }
+
+    @Override
+    public void onStringReceived(String s) {
+        System.out.println(s);
+    }
+
+    public static void main(String[] args){
+        new ClientInterface();
     }
 }

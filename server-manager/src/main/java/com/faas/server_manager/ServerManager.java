@@ -148,7 +148,6 @@ public class ServerManager {
                                 while (true) {
                                     TaggedConnection.Frame request = null;
                                     try {
-                                        Thread.sleep(10000);
                                         request = messagesSent.consume();
                                     } catch (InterruptedException e) {
                                         throw new RuntimeException(e);

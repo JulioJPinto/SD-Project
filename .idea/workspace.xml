@@ -6,22 +6,10 @@
   <component name="ChangeListManager">
     <list default="true" id="161ed5b7-7728-4e42-a545-45d3fbe0d328" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/Outputs/resultado cliente 1 jobID 1 input Loop.java.7z" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/Outputs/resultado cliente 1 jobID 2 input Loop.java.7z" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/Outputs/resultado cliente 2 jobID 1 input Loop.java.7z" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/Outputs/resultado cliente 2 jobID 2 input Loop.java.7z" beforeDir="false" afterPath="$PROJECT_DIR$/client/Outputs/resultado cliente 2 jobID 2 input Loop.java.7z" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/Outputs/resultado cliente 3 jobID 1 input Loop.java.7z" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/Outputs/resultado cliente 3 jobID 2 input Loop.java.7z" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/Outputs/resultado cliente 4 jobID 1 input Loop.java.7z" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/Outputs/resultado cliente 4 jobID 2 input Loop.java.7z" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/client/build/tmp/compileJava/previous-compilation-data.bin" beforeDir="false" afterPath="$PROJECT_DIR$/client/build/tmp/compileJava/previous-compilation-data.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/src/main/java/com/faas/client/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/com/faas/client/Client.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/src/main/java/com/faas/client/ClientInterface.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/com/faas/client/ClientInterface.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/src/main/java/com/faas/common/AtomicInteger.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/java/com/faas/common/AtomicInteger.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/src/main/java/com/faas/common/BoundedBuffer.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/java/com/faas/common/BoundedBuffer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/src/main/java/com/faas/common/ExecuteResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/java/com/faas/common/ExecuteResponse.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server-manager/src/main/java/com/faas/server_manager/ServerManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/server-manager/src/main/java/com/faas/server_manager/ServerManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server-worker/src/main/java/com/faas/server_worker/ServerWorker.java" beforeDir="false" afterPath="$PROJECT_DIR$/server-worker/src/main/java/com/faas/server_worker/ServerWorker.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

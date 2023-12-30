@@ -13,20 +13,25 @@ public class Client {
     private static final String SERVER_MANAGER_ADDRESS = "localhost"; // 127.0.0.1
     private static final int SERVER_MANAGER_PORT = 8080;
     private int authenticatedClientID;
-
-
-
+    private ThreadPool threadPool;
     private Socket socket;
     private Demultiplexer conn;
+    private ReturnListener listener;
+    private AtomicInteger jobCounter;
 
-    public Client() throws IOException {
+    public Client(ReturnListener listener) throws IOException {
         this.socket = new Socket(SERVER_MANAGER_ADDRESS, SERVER_MANAGER_PORT);
         this.conn = new Demultiplexer(new TaggedConnection(this.socket));
         this.conn.start();
+        this.threadPool = new ThreadPool();
+        this.threadPool.start(4);
+        this.listener = listener;
+        this.jobCounter = new AtomicInteger(0);
     }
 
     public void closeClient() throws Exception {
         this.conn.close();
+        this.threadPool.stop();
     }
 
     public int loginUser(String username, String password) throws IOException, ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
@@ -57,7 +62,28 @@ public class Client {
         return newUserResp.getAuthenticatedClientID();
     }
 
-    public boolean sendRequest(String filename, int memoryNeeded, int jobID) throws IOException {
+    public void executeJob(String filename, int memoryNeeded){
+        threadPool.execute(()->{
+            jobCounter.increment();
+            int jobID = jobCounter.get();
+
+            listener.onStringReceived("A enviar job nº " + jobID);
+
+            boolean success = false;
+            try {
+                success = this.sendRequest(filename,memoryNeeded,jobID);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
+            if (success)
+                listener.onStringReceived("Job nº " + jobID + " com input no ficheiro: " + filename + " executado com sucesso.");
+            else
+                listener.onStringReceived("Job nº " + jobID + " com input no ficheiro: " + filename + " falhou");
+        });
+    }
+
+    private boolean sendRequest(String filename, int memoryNeeded, int jobID) throws IOException {
 
         boolean success = true;
 
@@ -80,7 +106,19 @@ public class Client {
         return success;
     }
 
-    public StatusResponse getStatus() throws IOException {
+    public void executeStatus(){
+        threadPool.execute(()->{
+            String res;
+            try {
+                StatusResponse status = this.getStatus();
+                listener.onStringReceived("Atualmente existem " + status.getPendingTasks() + " tarefas pendentes e a memória disponível é " + status.getAvailableMemory() + ".");
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
+    }
+
+    private StatusResponse getStatus() throws IOException {
         StatusRequest statusReq = new StatusRequest(authenticatedClientID);
 
         conn.send(Thread.currentThread().getId(),statusReq);
