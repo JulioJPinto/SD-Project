@@ -6,13 +6,21 @@
   <component name="ChangeListManager">
     <list default="true" id="161ed5b7-7728-4e42-a545-45d3fbe0d328" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/Outputs/resultado cliente 1 jobID 1 input Loop.java.7z" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/Outputs/resultado cliente 1 jobID 2 input Loop.java.7z" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/Outputs/resultado cliente 2 jobID 1 input Loop.java.7z" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/Outputs/resultado cliente 2 jobID 2 input Loop.java.7z" beforeDir="false" afterPath="$PROJECT_DIR$/client/Outputs/resultado cliente 2 jobID 2 input Loop.java.7z" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/Outputs/resultado cliente 3 jobID 1 input Loop.java.7z" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/Outputs/resultado cliente 3 jobID 2 input Loop.java.7z" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/Outputs/resultado cliente 4 jobID 1 input Loop.java.7z" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/Outputs/resultado cliente 4 jobID 2 input Loop.java.7z" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/client/build/tmp/compileJava/previous-compilation-data.bin" beforeDir="false" afterPath="$PROJECT_DIR$/client/build/tmp/compileJava/previous-compilation-data.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/src/main/java/com/faas/client/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/com/faas/client/Client.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/src/main/java/com/faas/client/ClientInterface.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/com/faas/client/ClientInterface.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/src/main/java/com/faas/common/AtomicInteger.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/java/com/faas/common/AtomicInteger.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/src/main/java/com/faas/common/BoundedBuffer.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/java/com/faas/common/BoundedBuffer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/common/src/main/java/com/faas/common/ExecuteResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/java/com/faas/common/ExecuteResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/src/main/java/com/faas/common/Message.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/java/com/faas/common/Message.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server-manager/src/main/java/com/faas/server_manager/ServerManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/server-manager/src/main/java/com/faas/server_manager/ServerManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server-worker/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/server-worker/build.gradle" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server-worker/src/main/java/com/faas/server_worker/ServerWorker.java" beforeDir="false" afterPath="$PROJECT_DIR$/server-worker/src/main/java/com/faas/server_worker/ServerWorker.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -55,6 +63,9 @@
         <task path="$PROJECT_DIR$/server-manager">
           <activation />
         </task>
+        <task path="$PROJECT_DIR$">
+          <activation />
+        </task>
         <projects_view>
           <tree_state>
             <expand />
@@ -95,6 +106,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
     "git-widget-placeholder": "fp/connections",
+    "ignore.virus.scanning.warn.message": "true",
     "jdk.selected.JAVA_MODULE": "corretto-19",
     "last_opened_file_path": "C:/Users/jplop/OneDrive/Desktop/SD-Project/libs/sd23.jar",
     "node.js.detected.package.eslint": "true",
@@ -123,18 +135,6 @@
     </option>
   </component>
   <component name="RunManager" selected="Application.ClientInterface">
-    <configuration name="Client" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="com.faas.client.Client" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.faas.client.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="ClientInterface" type="Application" factoryName="Application" singleton="false" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.faas.client.ClientInterface" />
       <module name="SD-Groovy.client.main" />
@@ -178,6 +178,28 @@
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
+    </configuration>
+    <configuration name="SD-Project [build]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="build" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>false</RunAsTest>
+      <method v="2" />
     </configuration>
     <configuration name="SD-Project:client [:client:ClientInterface.main()]" type="GradleRunConfiguration" factoryName="Gradle" singleton="false">
       <ExternalSystemSettings>
@@ -224,20 +246,20 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="Application.Client" />
       <item itemvalue="Application.ClientInterface" />
       <item itemvalue="Application.ServerManager" />
       <item itemvalue="Application.ServerWorker" />
       <item itemvalue="Gradle.SD-Project:client [:client:ClientInterface.main()]" />
+      <item itemvalue="Gradle.SD-Project [build]" />
       <item itemvalue="Gradle.server-manager [build]" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Gradle.SD-Project [build]" />
         <item itemvalue="Application.ClientInterface" />
         <item itemvalue="Application.ServerManager" />
         <item itemvalue="Gradle.server-manager [build]" />
         <item itemvalue="Application.ServerWorker" />
-        <item itemvalue="Application.Client" />
       </list>
     </recent_temporary>
   </component>

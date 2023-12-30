@@ -11,6 +11,8 @@ import java.util.Scanner;
 public class ClientInterface {
     public static void main(String[] args){
         try (Scanner inputScanner = new Scanner(System.in)) {
+            ThreadPool threadPool = new ThreadPool();
+            threadPool.start(4);
             Client client = new Client();
             int authClientID;
 
@@ -56,7 +58,7 @@ public class ClientInterface {
 
                     String currFilename = filename;
                     int currMemoryNeeded = memoryNeeded;
-                    new Thread(() -> {
+                    threadPool.execute(()->{
                         int threadJobCounter = jobCounter.get();
                         String threadFilename = currFilename;
                         int threadMem = currMemoryNeeded;
@@ -75,10 +77,21 @@ public class ClientInterface {
                         else
                             System.out.println("Job nº " + threadJobCounter + " com input no ficheiro: " + threadFilename + " falhou");
 
-                    }).start();
+                    });
+                } else if (input == 2) {
+                    threadPool.execute(()->{
+                        try {
+                            StatusResponse status = client.getStatus();
+                            System.out.println("Atualmente existem " + status.getPendingTasks() + " tarefas pendentes e a memória disponível é " + status.getAvailableMemory() + ".");
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
 
+
+                    });
                 } else if (input == 9) {
                     client.closeClient();
+                    threadPool.stop();
                     break;
                 }
             }

@@ -46,4 +46,22 @@ public class AtomicInteger {
             this.lock.writeLock().unlock();
         }
     }
+
+    public void add(int value){
+        this.lock.writeLock().lock();
+        try {
+            this.value += value;
+        } finally {
+            this.lock.writeLock().unlock();
+        }
+    }
+
+    public void subtract(int value){
+        this.lock.writeLock().lock();
+        try {
+            this.value -= value;
+        } finally {
+            this.lock.writeLock().unlock();
+        }
+    }
 }

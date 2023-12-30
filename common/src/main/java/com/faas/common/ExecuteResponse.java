@@ -7,17 +7,20 @@ import java.io.IOException;
 public class ExecuteResponse extends Message{
 
     private boolean success;
+    private int memoryUsed;
     private byte[] result;
 
     public ExecuteResponse(){
         super(0,ExecuteResponse.class.getName());
         this.success = false;
+        this.memoryUsed = 0;
         this.result = null;
     }
 
-    public ExecuteResponse(int clientID, boolean success, byte[] result){
+    public ExecuteResponse(int clientID, boolean success, int memoryUsed,byte[] result){
         super(clientID,ExecuteResponse.class.getName());
         this.success = success;
+        this.memoryUsed = memoryUsed;
         this.result = result;
     }
 
@@ -29,9 +32,14 @@ public class ExecuteResponse extends Message{
         return success;
     }
 
+    public int getMemoryUsed() {
+        return memoryUsed;
+    }
+
     @Override
     protected void serializeSubclass(DataOutputStream out) throws IOException {
         out.writeBoolean(this.success);
+        out.writeInt(this.memoryUsed);
         out.writeInt(this.result.length);
         out.write(this.result);
     }
@@ -39,9 +47,10 @@ public class ExecuteResponse extends Message{
     @Override
     protected Message deserializeSubclass(DataInputStream in, int clientID) throws IOException {
         boolean success = in.readBoolean();
+        int memoryUsed = in.readInt();
         int length = in.readInt();
         byte[] result = in.readNBytes(length);
 
-        return new ExecuteResponse(clientID,success,result);
+        return new ExecuteResponse(clientID,success,memoryUsed,result);
     }
 }

@@ -13,11 +13,10 @@ import com.faas.common.*;
 public class ServerManager {
     private static final int CLIENT_PORT = 8080;
     private static final int SERVER_WORKER_PORT = 8081;
-
     private static AtomicInteger currentAuthUsers = new AtomicInteger(0);
-    private static final Queue<TaggedConnection.Frame> messagesSent = new ConcurrentLinkedQueue<TaggedConnection.Frame>();
-
-    private static final Queue<TaggedConnection.Frame> messagesReceived = new ConcurrentLinkedQueue<TaggedConnection.Frame>();
+    private static AtomicInteger availableMemory = new AtomicInteger(0);
+    private static final BoundedBuffer<TaggedConnection.Frame> messagesSent = new BoundedBuffer<>(50);
+    private static final BoundedBuffer<TaggedConnection.Frame> messagesReceived = new BoundedBuffer<>(50);
     private static final SynchronizedMap<String,User> users = new SynchronizedMap<>();
 
     private static final ReentrantLock authenticationLock = new ReentrantLock();
@@ -46,6 +45,8 @@ public class ServerManager {
     }
 
     public static void main(String[] args) {
+        ThreadPool threadPool = new ThreadPool();
+        threadPool.start(16);
         Thread listenClientThread = new Thread(() -> {
             try (ServerSocket clientSocket = new ServerSocket(CLIENT_PORT)) {
                 System.out.println("Waiting for clients on port " + CLIENT_PORT + "...");
@@ -79,34 +80,47 @@ public class ServerManager {
                             }
 
                             int finalAuthUserId = authUserId;
-                            new Thread(() -> {
+                            threadPool.execute(()->{
                                 //recebe dos workers e envia para os clientes
-                               while (true){
-                                  TaggedConnection.Frame response = messagesReceived.peek();
-                                   if (response != null && response.getMessage().getAuthClientID() == finalAuthUserId){
-                                      messagesReceived.remove(response);
+                                while (true){
+                                    TaggedConnection.Frame response = messagesReceived.peek();
+                                    if (response != null && response.getMessage().getAuthClientID() == finalAuthUserId){
+                                        messagesReceived.remove(response);
 
-                                      try {
-                                          conn.send(response);
-                                      } catch (IOException e) {
-                                          throw new RuntimeException(e);
-                                      }
-                                  }
-                               }
-                            }).start();
+                                        try {
+                                            conn.send(response);
+                                        } catch (IOException e) {
+                                            throw new RuntimeException(e);
+                                        }
+                                    }
+                                }
+                            });
 
                             while (true) {
-                                //recebe dos clientes e envia para os workers
+                                //recebe dos clientes e envia para a thread do manager responsável pelos workers
                                TaggedConnection.Frame request = conn.receive();
 
-
-                               messagesSent.add(request);
+                                if (request.getMessage().getClass().getName().equals(StatusRequest.class.getName())){
+                                    threadPool.execute(()->{
+                                        StatusResponse statusResp = new StatusResponse(finalAuthUserId,messagesSent.length(),availableMemory.get());
+                                        try {
+                                            conn.send(request.getTag(),statusResp);
+                                        } catch (IOException e) {
+                                            throw new RuntimeException(e);
+                                        }
+                                    });
+                                } else {
+                                    messagesSent.produce(request);
+                                    System.out.println("Pendente: " + messagesSent.length());
+                                }
                             }
 
                         } catch (IOException | ClassNotFoundException | InvocationTargetException | NoSuchMethodException |
                                  InstantiationException | IllegalAccessException e){
                             System.out.println("Error: " + e.getMessage());
 
+                        } catch (InterruptedException e) {
+                            throw new RuntimeException(e);
                         }
                     }).start();
                 }
@@ -124,31 +138,45 @@ public class ServerManager {
                     Socket socket = serverWorkerSocket.accept();
                     System.out.println("Server worker connected.");
                     new Thread(() ->{
+                        WorkerHello workerHello = null;
                         try (TaggedConnection conn = new TaggedConnection(socket)){
+                            workerHello = (WorkerHello) conn.receive().getMessage();
+                            availableMemory.add(workerHello.getTotalMemory());
 
-                            new Thread(() ->{
-                                //envia para os workers
+                            threadPool.execute(()->{
+                                //envia requests para os workers
                                 while (true) {
-                                    TaggedConnection.Frame request = messagesSent.poll();
+                                    TaggedConnection.Frame request = null;
+                                    try {
+                                        Thread.sleep(10000);
+                                        request = messagesSent.consume();
+                                    } catch (InterruptedException e) {
+                                        throw new RuntimeException(e);
+                                    }
 
-                                    if (request != null) {
-                                        try {
-                                            conn.send(request);
-                                        } catch (IOException e) {
-                                            throw new RuntimeException(e);
-                                        }
+                                    try {
+                                        availableMemory.subtract(((ExecuteRequest)request.getMessage()).getMemoryNeeded());
+                                        conn.send(request);
+                                    } catch (IOException e) {
+                                        throw new RuntimeException(e);
                                     }
                                 }
-                            }).start();
+                            });
 
                             while (true) {
-                                //recebe dos workers
+                                //recebe respostas a requests dos workers
                                 TaggedConnection.Frame response = conn.receive();
-                                messagesReceived.add(response);
+
+                                availableMemory.add(((ExecuteResponse)response.getMessage()).getMemoryUsed());
+                                messagesReceived.produce(response);
                             }
                         } catch (IOException | InvocationTargetException | InstantiationException |
-                                 ClassNotFoundException | NoSuchMethodException | IllegalAccessException e) {
+                                 ClassNotFoundException | NoSuchMethodException | IllegalAccessException |
+                                 InterruptedException e) {
                             throw new RuntimeException(e);
+                        } finally {
+                            assert workerHello != null;
+                            availableMemory.subtract(workerHello.getTotalMemory());
                         }
                     }).start();
 

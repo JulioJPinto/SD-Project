@@ -12,28 +12,21 @@ import java.nio.file.StandardOpenOption;
 public class Client {
     private static final String SERVER_MANAGER_ADDRESS = "localhost"; // 127.0.0.1
     private static final int SERVER_MANAGER_PORT = 8080;
-
     private int authenticatedClientID;
+
+
 
     private Socket socket;
     private Demultiplexer conn;
 
     public Client() throws IOException {
-        try {
-            this.socket = new Socket(SERVER_MANAGER_ADDRESS, SERVER_MANAGER_PORT);
-            this.conn = new Demultiplexer(new TaggedConnection(this.socket));
-            this.conn.start();
-        } catch (Exception e) {
-            System.out.println("Error: " + e.getMessage());
-        }
+        this.socket = new Socket(SERVER_MANAGER_ADDRESS, SERVER_MANAGER_PORT);
+        this.conn = new Demultiplexer(new TaggedConnection(this.socket));
+        this.conn.start();
     }
 
-    public void closeClient() throws IOException {
-        try {
-            this.conn.close();
-        } catch (Exception e) {
-            System.out.println("Error: " + e.getMessage());
-        }
+    public void closeClient() throws Exception {
+        this.conn.close();
     }
 
     public int loginUser(String username, String password) throws IOException, ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
@@ -85,5 +78,13 @@ public class Client {
         Files.write(outputPath, response.getResult());
 
         return success;
+    }
+
+    public StatusResponse getStatus() throws IOException {
+        StatusRequest statusReq = new StatusRequest(authenticatedClientID);
+
+        conn.send(Thread.currentThread().getId(),statusReq);
+
+        return (StatusResponse) conn.receive(Thread.currentThread().getId());
     }
 }

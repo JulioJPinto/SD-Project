@@ -1,8 +1,6 @@
 package com.faas.server_worker;
 
-import com.faas.common.ExecuteRequest;
-import com.faas.common.ExecuteResponse;
-import com.faas.common.TaggedConnection;
+import com.faas.common.*;
 import sd23.*;
 
 import java.io.*;
@@ -14,15 +12,20 @@ public class ServerWorker {
 
     public static void main(String[] args) {
         try {
+            ThreadPool threadPool = new ThreadPool();
+            threadPool.start(4);
             final int memory = Integer.parseInt(args[0]);
-            int usedMemory = 0;
             System.out.println("Memory: " + memory);
 
             Socket socket = new Socket(SERVER_MANAGER_ADDRESS, SERVER_MANAGER_PORT);
             TaggedConnection conn = new TaggedConnection(socket);
+
+            WorkerHello workerHello = new WorkerHello(memory);
+            conn.send(1,workerHello);
+
             while (true){
                 TaggedConnection.Frame received = conn.receive();
-                new Thread(()-> {
+                threadPool.execute(()->{
                     boolean success;
                     ExecuteRequest request = (ExecuteRequest) received.getMessage();
 
@@ -35,15 +38,14 @@ public class ServerWorker {
                         result = e.getMessage().getBytes();
                     }
 
-                    ExecuteResponse response = new ExecuteResponse(request.getAuthClientID(), success, result);
+                    ExecuteResponse response = new ExecuteResponse(request.getAuthClientID(), success, request.getMemoryNeeded(),result);
 
                     try {
                         conn.send(received.getTag(),response);
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
-                }).start();
-
+                });
             }
 
         } catch (Exception e) {
