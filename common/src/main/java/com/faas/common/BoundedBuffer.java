@@ -48,7 +48,6 @@ public class BoundedBuffer<T> {
             this.items[this.tail] = item;
             this.tail = (this.tail + 1) % this.capacity;
             this.count++;
-            System.out.println("Count: " + this.count);
             this.notEmpty.signal();
         } finally {
             this.lock.writeLock().unlock();

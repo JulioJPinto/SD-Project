@@ -40,7 +40,6 @@ public abstract class Message {
 
     public static Message deserialize(DataInputStream in) throws IOException, ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
         int authClientID = in.readInt();
-        System.out.println("ID do Cliente: " + authClientID);
         String subName = in.readUTF();
         Class<?> message = Class.forName(subName);
         Message castedMessage = (Message) message.getDeclaredConstructor().newInstance();

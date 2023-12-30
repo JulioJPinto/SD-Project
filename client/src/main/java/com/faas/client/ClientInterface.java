@@ -6,6 +6,8 @@ import com.faas.common.ExecuteResponse;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Objects;
+import java.util.Queue;
 import java.util.Scanner;
 
 public class ClientInterface implements ReturnListener{
@@ -49,13 +51,13 @@ public class ClientInterface implements ReturnListener{
             }
 
             while (true) {
-                System.out.println("1 - Enviar Pedido\n2 - Consulta\n9 - Sair");
+                System.out.println("--------------------\n1 - Enviar Pedido\n2 - Consulta\n9 - Sair\n--------------------");
                 int input = inputScanner.nextInt();
                 if (input == 1) {
                     System.out.println("Nome do ficheiro e memória necessária em linhas separadas.");
-
-                    String filename = inputScanner.next();
-                    int memoryNeeded = inputScanner.nextInt();
+                    Queue<String> arguments = ThreadSafeInputOutput.getInput(2);
+                    String filename = arguments.poll();
+                    int memoryNeeded = Integer.parseInt(Objects.requireNonNull(arguments.poll()));
 
                     client.executeJob(filename,memoryNeeded);
 
@@ -73,7 +75,7 @@ public class ClientInterface implements ReturnListener{
 
     @Override
     public void onStringReceived(String s) {
-        System.out.println(s);
+        ThreadSafeInputOutput.printString(s);
     }
 
     public static void main(String[] args){

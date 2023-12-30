@@ -111,7 +111,6 @@ public class ServerManager {
                                     });
                                 } else {
                                     messagesSent.produce(request);
-                                    System.out.println("Pendente: " + messagesSent.length());
                                 }
                             }
 
