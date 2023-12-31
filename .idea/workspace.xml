@@ -6,11 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="161ed5b7-7728-4e42-a545-45d3fbe0d328" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/build/tmp/compileJava/previous-compilation-data.bin" beforeDir="false" afterPath="$PROJECT_DIR$/client/build/tmp/compileJava/previous-compilation-data.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/src/main/java/com/faas/common/SynchronizedMap.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/java/com/faas/common/SynchronizedMap.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/src/main/java/com/faas/common/UnboundedBuffer.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/java/com/faas/common/UnboundedBuffer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/src/main/java/com/faas/common/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/java/com/faas/common/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server-manager/src/main/java/com/faas/server_manager/Scheduler.java" beforeDir="false" afterPath="$PROJECT_DIR$/server-manager/src/main/java/com/faas/server_manager/Scheduler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server-manager/src/main/java/com/faas/server_manager/ServerManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/server-manager/src/main/java/com/faas/server_manager/ServerManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server-manager/src/main/java/com/faas/server_manager/WorkersInfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/server-manager/src/main/java/com/faas/server_manager/WorkersInfo.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -282,5 +280,16 @@
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
 </project>

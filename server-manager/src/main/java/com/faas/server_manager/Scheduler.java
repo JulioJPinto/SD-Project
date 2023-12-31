@@ -41,6 +41,7 @@ public class Scheduler {
     public static WorkerStats tryExecuteTask(ExecuteRequest task, int skippedTimes) {
         WorkerStats chosenServer = null;
         Tuple<int[], Integer> availableServers = WorkersInfo.getAvailableWorkers(task.getMemoryNeeded());
+        System.out.println("Available servers: " + availableServers.getSecond());
 
         if(availableServers.getSecond() > 0) {
             int randomIndex = random.nextInt(availableServers.getSecond());

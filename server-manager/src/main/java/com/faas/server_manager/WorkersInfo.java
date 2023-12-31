@@ -24,9 +24,6 @@ public class WorkersInfo {
 
     public static void updateWorkerMemory(int id, int memory, boolean subtract) {
         WorkerStats worker = workers.get(id);
-        //if (worker == null) {
-        //    return;
-        //}
         worker.update(memory, subtract);
         updateAvailableMemory(memory, subtract);
     }

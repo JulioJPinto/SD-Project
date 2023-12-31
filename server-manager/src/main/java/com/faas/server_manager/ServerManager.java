@@ -69,9 +69,10 @@ public class ServerManager {
 
                             while (true) {
                                 //recebe dos clientes e envia para a thread do manager responsável pelos workers
-                               TaggedConnection.Frame request = conn.receive();
-
+                                TaggedConnection.Frame request = conn.receive();
+                                System.out.println("Request: " + request.getMessage().toString());
                                 if (request.getMessage().getClass().getName().equals(StatusRequest.class.getName())){
+                                    System.out.println("Status Request");
                                     threadPool.execute(() -> {
                                         StatusResponse statusResp = new StatusResponse(finalAuthUserId,messagesSent.length(), WorkersInfo.getAvailableMemory());
                                         try {
@@ -81,11 +82,15 @@ public class ServerManager {
                                         }
                                     });
                                 } else {
+                                    System.out.println("Execute Request");
+                                    System.out.println("Request: " + request.getMessage().toString());
                                     WorkerStats worker = null;
                                     while (worker == null) {
+                                        System.out.println("Worker null");
                                         worker = Scheduler.chooseNextWorker(request.getMessage());
                                     }
-                                    messagesSent.produce(new Tuple<>(worker, request));
+
+                                    messagesSent.produce(new Tuple<>(null, request));
                                     System.out.println("Pendente: " + messagesSent.length());
                                 }
                             }
@@ -119,14 +124,8 @@ public class ServerManager {
                             workerHello = (WorkerHello) conn.receive().getMessage();
                             int workerId = WorkersInfo.generateId();
                             workerStats = new WorkerStats(workerId, workerHello.getTotalMemory(), conn);
-                            WorkersInfo.updateWorkerMemory(workerId, workerHello.getTotalMemory(), false);
                             WorkersInfo.addWorker(workerId, workerStats);
-                            // print every worker inside the map
-                            for (Map.Entry<Integer, WorkerStats> entry : WorkersInfo.getWorkersEntries()) {
-                                System.out.println("Key: " + entry.getKey() + ":" + "Valor: " + entry.getValue().toString());
-                            }
-                            System.out.println("Memory: " + workerHello.getTotalMemory());
-                            System.out.println("Total memory: " + WorkersInfo.getAvailableMemory());
+                            WorkersInfo.updateWorkerMemory(workerId, workerHello.getTotalMemory(), false);
 
                             threadPool.execute(() -> {
                                 //envia requests para os workers
@@ -153,6 +152,7 @@ public class ServerManager {
                         } catch (IOException | InvocationTargetException | InstantiationException |
                                  ClassNotFoundException | NoSuchMethodException | IllegalAccessException |
                                  InterruptedException e) {
+                            e.printStackTrace();
                             throw new RuntimeException(e);
                         } finally {
                             assert workerHello != null;
